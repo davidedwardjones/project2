@@ -4,8 +4,8 @@ public class LinearEq
 {
 	ArrayList<Record> records = null;
 	
-	float a0 = 0;
-	float a1 = 0;
+	double a0 = 0;
+	double a1 = 0;
 	
 	public LinearEq(ArrayList<Record> records)
 	{
@@ -14,10 +14,10 @@ public class LinearEq
 	
 	public void doRegression()
 	{
-		float a = 0;
-		float b = 0;
-		float avLeader = getAv(PlayerType.LEADER);
-		float avFollower = getAv(PlayerType.FOLLOWER);
+		double a = 0;
+		double b = 0;
+		double avLeader = getAv(PlayerType.LEADER);
+		double avFollower = getAv(PlayerType.FOLLOWER);
 		for(Record r: records)
 		{
 			a += (r.m_leaderPrice - avLeader) * (r.m_followerPrice - avFollower);
@@ -28,9 +28,35 @@ public class LinearEq
 		this.a0 = avFollower - a1*avLeader;
 	}
 	
+	/*
+	//lecture 4, slide 20
+	public void doRegression()
+	{
+		//x= leader
+		//y= follower
+		
+		float sumxsquared = 0;
+		float sumy = 0;
+		float sumx = 0;
+		float sumxy = 0;
+		int T = records.size();
+		
+		for(Record r: records)
+		{
+			sumy += r.m_followerPrice;
+			sumx += r.m_leaderPrice;
+			sumxsquared += r.m_leaderPrice*r.m_leaderPrice;
+			sumxy += r.m_leaderPrice * r.m_followerPrice;
+		
+		}
+		
+		this.a0 = (sumxsquared*sumy - sumx*sumxy) / (T*(sumxsquared - (sumx*sumx)));
+		this.a1 = T*(sumxy - sumx*sumy)/(T*sumxsquared - (sumx*sumx));
+	}*/
+	
 	public float getReactionEstimate(float leaderPrice)
 	{
-		return a0 + (a1*leaderPrice);
+		return (float)(a0 + (a1*leaderPrice));
 	}
 	
 	public float getAv(PlayerType type)
@@ -47,7 +73,7 @@ public class LinearEq
 	
 	public String toString()
 	{
-		return "Ur = " + String.format("%.2f",a0) + " + " + String.format("%.2f",a1) + "*Ul";
+		return "Ur = " + String.format("%.5f",a0) + " + " + String.format("%.5f",a1) + "*Ul";
 	}
 	
 }
