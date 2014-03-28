@@ -28,9 +28,9 @@ to run the GUI of the platform;
 
 iii) run
 
-java -Djava.rmi.server.hostname=127.0.0.1 SimpleLeader &
+java -Djava.rmi.server.hostname=127.0.0.1 Leader &
 
-to run the SimpleLeader.
+to run the JokerLeader.
 
 And after these steps, you can play with the GUI to get some ideas of how the platform works.
 
