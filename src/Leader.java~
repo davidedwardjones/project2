@@ -18,7 +18,7 @@ final class Leader
 	private Leader()
 		throws RemoteException, NotBoundException
 	{
-		super(PlayerType.LEADER, "Leader");
+		super(PlayerType.LEADER, "Simple Leader");
 	}
 
 	@Override

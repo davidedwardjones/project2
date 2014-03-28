@@ -45,4 +45,9 @@ public class LinearEq
 		return total/records.size();
 	}
 	
+	public String toString()
+	{
+		return "Ur = " + String.format("%.2f",a0) + " + " + String.format("%.2f",a1) + "*Ul";
+	}
+	
 }
