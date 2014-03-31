@@ -50,10 +50,10 @@ final class Leader
 		System.out.println(lin.toString());
 		
 		//find best strat here
-		
-		return 0;
+		return findMax(lin);
 	}
 
+  int windowSize = 25;
 	//Return array of all previous transactions
 	private ArrayList<Record> getAllRecords(int numDays)
 	{
@@ -61,7 +61,7 @@ final class Leader
 		ArrayList<Record> records = new ArrayList();
 		try
 		{
-			for(int i = 1; i < numDays; i++)
+			for(int i = 1/*numDays-windowSize*/; i < numDays; i++)
 			{
 				records.add(m_platformStub.query(m_type, i));
 			}
@@ -77,6 +77,7 @@ final class Leader
 	public static void main(final String[] p_args)
 		throws RemoteException, NotBoundException
 	{
+    // windowSize = Integer.parseInt(p_args[0]);
 		new Leader();
 	}
 
@@ -98,4 +99,69 @@ final class Leader
 			System.exit(0);
 		}
 	}
+
+  double totalProfit = 0.0;
+  private float findMax(LinearEq lin)
+  {
+    // first scan the equation starting from 0
+    double leaderScan = 0.1;
+    double step = 0.001;
+    double current = -Double.MAX_VALUE;
+    double newCurrent;
+
+    // check for errors that might happen
+    if (0.3 * lin.a1 > 1)   System.out.println("findMax(): May not be able to work out max as lin.a1 is " + lin.a1);
+    if (0.3 * lin.a0 == -2) System.out.println("findMax(): May not be able to work out max as lin.a0 is " + lin.a0);
+
+    while ((newCurrent = ((leaderScan - 1) * (2 - leaderScan + 0.3 * (lin.a0 + lin.a1 * leaderScan)))) > current)
+    {
+      current = newCurrent;
+      leaderScan+=step;
+    }
+    totalProfit += newCurrent;
+    return (float)leaderScan;
+  }
+
+  @Override
+  public void startSimulation(int p_steps)
+    throws RemoteException
+  {
+    super.startSimulation(p_steps);
+    totalProfit = 0.0;
+    //TO DO: delete the line above and put your own initialization code here
+  }
+
+  /**
+   * You may want to delete this method if you don't want to do any
+   * finalization
+   * @throws RemoteException If implemented, the RemoteException *MUST* be
+   * thrown by this method
+   */
+  @Override
+  public void endSimulation()
+    throws RemoteException
+  {
+    super.endSimulation();
+    System.out.println("total profit: " + getTotalProfit());
+    //TO DO: delete the line above and put your own finalization code here
+  }
+
+  public float getTotalProfit()
+  {
+    //for all dates, get records
+    double totalProfit = 0.0;
+    try
+    {
+      for(int i = 101; i <= 130; i++)
+      {
+        Record rec = m_platformStub.query(m_type, i);
+        totalProfit += (rec.m_leaderPrice - 1)*(2 - rec.m_leaderPrice + 0.3*rec.m_followerPrice);
+      }
+    }
+    catch(RemoteException e)
+    {
+      System.err.println(e);    
+    }
+    return (float)totalProfit;
+  }
 }
