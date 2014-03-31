@@ -4,15 +4,15 @@ public class LinearEq
 {
 	ArrayList<Record> records = null;
 	
-	double a0 = 0;
-	double a1 = 0;
+	public double a0 = 0;
+	public double a1 = 0;
 	
 	public LinearEq(ArrayList<Record> records)
 	{
 		this.records = records;
 	}
 	
-	public void doRegression()
+	/*public void doRegression()
 	{
 		double a = 0;
 		double b = 0;
@@ -26,9 +26,9 @@ public class LinearEq
 		
 		this.a1 = a/b;
 		this.a0 = avFollower - a1*avLeader;
-	}
+	}*/
 	
-	/*
+	  private final double forgettingFactor = 0.95;
 	//lecture 4, slide 20
 	public void doRegression()
 	{
@@ -41,18 +41,20 @@ public class LinearEq
 		float sumxy = 0;
 		int T = records.size();
 		
-		for(Record r: records)
+		for(int i = records.size()-1; i >= 0; i--)
 		{
-			sumy += r.m_followerPrice;
-			sumx += r.m_leaderPrice;
-			sumxsquared += r.m_leaderPrice*r.m_leaderPrice;
-			sumxy += r.m_leaderPrice * r.m_followerPrice;
+			Record r = records.get(i);
+			double lambda = Math.pow(forgettingFactor, T + 1 - i);
+			sumy += lambda *r.m_followerPrice;
+			sumx += lambda *r.m_leaderPrice;
+			sumxsquared += lambda *r.m_leaderPrice*r.m_leaderPrice;
+			sumxy += lambda * r.m_leaderPrice * r.m_followerPrice;
 		
 		}
 		
 		this.a0 = (sumxsquared*sumy - sumx*sumxy) / (T*(sumxsquared - (sumx*sumx)));
 		this.a1 = T*(sumxy - sumx*sumy)/(T*sumxsquared - (sumx*sumx));
-	}*/
+	}
 	
 	public float getReactionEstimate(float leaderPrice)
 	{
