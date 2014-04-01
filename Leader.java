@@ -45,15 +45,16 @@ final class Leader
 	private float getPrice(ArrayList<Record> records)
 	{
 		//linear regression for records
-		LinearEq lin = new LinearEq(records);
-		lin.doRegression();
-		System.out.println(lin.toString());
+		LinearEq lin = new LinearEq(records, m_platformStub);
+		lin.doRegression1();
+		//lin.doRegression2();
+		//System.out.println(lin.toString());
 		
 		//find best strat here
 		return findMax(lin);
 	}
 
-  int windowSize = 25;
+  int windowSize = 100;
 	//Return array of all previous transactions
 	private ArrayList<Record> getAllRecords(int numDays)
 	{
@@ -61,7 +62,7 @@ final class Leader
 		ArrayList<Record> records = new ArrayList();
 		try
 		{
-			for(int i = 1/*numDays-windowSize*/; i < numDays; i++)
+			for(int i = numDays-windowSize; i < numDays; i++)
 			{
 				records.add(m_platformStub.query(m_type, i));
 			}
@@ -103,23 +104,7 @@ final class Leader
   double totalProfit = 0.0;
   private float findMax(LinearEq lin)
   {
-    // first scan the equation starting from 0
-    double leaderScan = 0.1;
-    double step = 0.001;
-    double current = -Double.MAX_VALUE;
-    double newCurrent;
-
-    // check for errors that might happen
-    if (0.3 * lin.a1 > 1)   System.out.println("findMax(): May not be able to work out max as lin.a1 is " + lin.a1);
-    if (0.3 * lin.a0 == -2) System.out.println("findMax(): May not be able to work out max as lin.a0 is " + lin.a0);
-
-    while ((newCurrent = ((leaderScan - 1) * (2 - leaderScan + 0.3 * (lin.a0 + lin.a1 * leaderScan)))) > current)
-    {
-      current = newCurrent;
-      leaderScan+=step;
-    }
-    totalProfit += newCurrent;
-    return (float)leaderScan;
+    return (float) ((2.7 + 0.3 * lin.a0) / (2.0 - 0.6 * lin.a1));
   }
 
   @Override
