@@ -46,8 +46,8 @@ final class Leader
 	{
 		//linear regression for records
 		LinearEq lin = new LinearEq(records, m_platformStub);
-		//lin.doRegression1();
-		lin.doRegression2();
+		lin.doRegression1();
+		//lin.doRegression2();
 		//System.out.println(lin.toString());
 		
 		//find best strat here

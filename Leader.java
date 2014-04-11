@@ -54,7 +54,7 @@ final class Leader
 		return findMax(lin);
 	}
 
-  int windowSize = 100;
+  int windowSize = 20;
 	//Return array of all previous transactions
 	private ArrayList<Record> getAllRecords(int numDays)
 	{
